@@ -1,0 +1,2 @@
+// 由 data/timing.json 生成（scripts/set_lyrics.py 或 beats.py 会重写它）：拍点、小节线、乐句时间（秒）
+export default {"source": "assets/song.wav", "clip_offset_in_song": 0.0, "duration": 6.4, "bpm": 140.0, "beat_period": 0.4286, "beats": [0.0, 0.429, 0.857, 1.286, 1.714, 2.143, 2.571, 3.0, 3.429, 3.857, 4.286, 4.714, 5.143, 5.571, 6.0], "downbeats": [0.0, 1.714, 3.429, 5.143], "phrases": [{"phrase": 1, "line": 1, "start": 0.3, "end": 1.95, "text": "示例字幕第一句"}, {"phrase": 2, "line": 2, "start": 3.2, "end": 5.5, "text": "換成你的歌詞"}], "script": "traditional", "demo": true};

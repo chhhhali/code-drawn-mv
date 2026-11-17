@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <!-- 角色設定圖（第 3 步）：和 MV 用同一份 src/character.js。 -->
+    <script src="lib/gsap/gsap.min.js"></script>
+    <script type="importmap">
+      { "imports": { "three": "./lib/three/three.module.js", "three/addons/": "./lib/three/addons/" } }
+    </script>
+    <style>
+      @font-face {
+        font-family: "MVSong";
+        src: local("Songti TC Bold"), local("STSongti-TC-Bold"), local("Songti SC Bold"), local("STSongti-SC-Bold");
+        font-weight: 700;
+      }
+      html,
+      body {
+        margin: 0;
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: #efe6d4;
+      }
+      #root {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        font-family: "MVSong", serif;
+      }
+      #sheet {
+        position: absolute;
+        inset: 0;
+        width: 1920px;
+        height: 1080px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="sheet" data-start="0" data-duration="1" data-width="1920" data-height="1080">
+      <canvas id="sheet" width="1920" height="1080" data-layout-allow-overflow></canvas>
+    </div>
+    <script>
+      window.__timelines = window.__timelines || {};
+      window.__timelines["sheet"] = gsap.timeline({ paused: true });
+    </script>
+    <script type="module">
+      import { drawPerson, PALETTES } from "./src/character.js";
+
+      const FONT = '"MVSong", "Songti TC", serif';
+      const ctx = document.getElementById("sheet").getContext("2d");
+
+      function figure(who, pose) {
+        const c = document.createElement("canvas");
+        c.width = 600;
+        c.height = 900;
+        drawPerson(c.getContext("2d"), 600, 900, who, pose);
+        return c;
+      }
+
+      function tile(img, x, y, w, h, { flip = false, label = "" } = {}) {
+        ctx.fillStyle = "rgba(90,70,50,0.12)";
+        ctx.beginPath();
+        ctx.ellipse(x + w / 2, y + h - 6, w * 0.32, 10, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.save();
+        ctx.shadowColor = "rgba(60,40,20,0.22)";
+        ctx.shadowBlur = 10;
+        ctx.shadowOffsetY = 4;
+        if (flip) {
+          ctx.translate(x + w, y);
+          ctx.scale(-1, 1);
+          ctx.drawImage(img, 0, 0, w, h);
+        } else {
+          ctx.drawImage(img, x, y, w, h);
+        }
+        ctx.restore();
+        if (label) {
+          ctx.fillStyle = "#5a4a3c";
+          ctx.font = `700 22px ${FONT}`;
+          ctx.textAlign = "center";
+          ctx.fillText(label, x + w / 2, y + h + 30);
+          ctx.textAlign = "left";
+        }
+      }
+
+      function headTile(img, x, y, size, label) {
+        ctx.save();
+        ctx.fillStyle = "#f7f1e4";
+        ctx.beginPath();
+        ctx.roundRect(x, y, size, size, 14);
+        ctx.fill();
+        ctx.clip();
+        ctx.drawImage(img, 95, 120, 410, 410, x, y + 4, size, size);
+        ctx.restore();
+        ctx.fillStyle = "#5a4a3c";
+        ctx.font = `700 20px ${FONT}`;
+        ctx.textAlign = "center";
+        ctx.fillText(label, x + size / 2, y + size + 26);
+        ctx.textAlign = "left";
+      }
+
+      function swatches(P, keys, x, y) {
+        keys.forEach(([k, name], i) => {
+          ctx.fillStyle = P[k];
+          ctx.beginPath();
+          ctx.roundRect(x + i * 76, y, 62, 34, 6);
+          ctx.fill();
+          ctx.strokeStyle = "rgba(60,45,35,0.35)";
+          ctx.lineWidth = 2;
+          ctx.stroke();
+          ctx.fillStyle = "#6b5a4b";
+          ctx.font = `700 15px ${FONT}`;
+          ctx.fillText(name, x + i * 76, y + 54);
+          ctx.font = "13px Menlo, monospace";
+          ctx.font = "12px Menlo, monospace";
+          ctx.fillText(P[k], x + i * 76, y + 72);
+        });
+      }
+
+      function section(who, y, title, note, poses, moods, swatchKeys) {
+        ctx.fillStyle = "#3a2d29";
+        ctx.font = `700 60px ${FONT}`;
+        ctx.fillText(title, 60, y + 70);
+        ctx.font = `700 19px ${FONT}`;
+        ctx.fillStyle = "#6b5a4b";
+        note.forEach((line, i) => ctx.fillText(line, 60, y + 110 + i * 28));
+        poses.forEach(([pose, label, opts], i) => tile(figure(who, pose), 455 + i * 200, y + 18, 196, 294, { label, ...(opts || {}) }));
+        moods.forEach(([mood, label], i) => headTile(figure(who, { mood }), 1478 + (i % 3) * 136, y + 18 + Math.floor(i / 3) * 160, 112, label));
+        swatches(PALETTES[who], swatchKeys, 60, y + 230);
+      }
+
+      async function build() {
+        await document.fonts.load(`700 60px ${FONT}`);
+        const g = ctx.createLinearGradient(0, 0, 0, 1080);
+        g.addColorStop(0, "#f2eadb");
+        g.addColorStop(1, "#e8dcc6");
+        ctx.fillStyle = g;
+        ctx.fillRect(0, 0, 1920, 1080);
+        ctx.strokeStyle = "rgba(120,100,80,0.25)";
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(60, 540);
+        ctx.lineTo(1860, 540);
+        ctx.stroke();
+
+        section(
+          "a",
+          40,
+          "a",
+          ["示例角色（占位）", "短发、衬衫、长裤", "build: \"shirt\""],
+          [
+            [{ mood: "neutral" }, "3/4 侧面"],
+            [{ view: "back" }, "背影"],
+            [{ reach: 1, tilt: -0.2, mood: "neutral" }, "伸手"],
+            [{ sit: 1, tilt: 0.16, gaze: 0.8, mood: "sad" }, "坐着低头"],
+            [{ walk: 0.2, mood: "neutral" }, "走路"],
+          ],
+          [["neutral", "平静"], ["smile", "开心"], ["sad", "难过"], ["cry", "哭"], ["surprise", "惊讶"], ["shy", "害羞"]],
+          [["skin", "肤色"], ["hair", "头发"], ["top", "衬衫"], ["bottom", "长裤"]],
+        );
+        section(
+          "b",
+          575,
+          "b",
+          ["示例角色（占位）", "长发、上衣、裙子", "build: \"dress\"；不画背影，转身用镜像"],
+          [
+            [{ mood: "smile" }, "3/4 侧面"],
+            [{ walk: 0.25, mood: "neutral" }, "走路"],
+            [{ mood: "sad", tilt: 0.05 }, "转身（镜像）", { flip: true }],
+            [{ reach: 1, mood: "smile" }, "挥手"],
+            [{ sit: 1, mood: "shy", gaze: 0.6 }, "坐着（害羞）"],
+          ],
+          [["smile", "开心"], ["shy", "害羞"], ["sad", "难过"], ["cry", "哭"], ["surprise", "惊讶"], ["neutral", "平静"]],
+          [["skin", "肤色"], ["hair", "头发"], ["top", "上衣"], ["bottom", "裙子"], ["accent", "发箍"]],
+        );
+      }
+
+      window.__hf = window.__hf || {};
+      window.__hf.buildReady = window.__hf.buildReady || {};
+      window.__hf.buildReady["sheet"] = build();
+    </script>
+  </body>
+</html>

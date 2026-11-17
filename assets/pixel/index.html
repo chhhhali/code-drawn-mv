@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="zh-Hans" data-resolution="landscape">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <!-- 像素光影版 MV 的根合成：一张全屏 canvas + 一条音轨。画面全部由 src/main.js 按时间 t 绘制（480×270 逐像素画，×4 放大）。
+         data-duration 要等于歌曲长度（scripts/new_project.py --song 会按 assets/song.wav 自动改）。 -->
+    <script src="lib/gsap/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1920px; height: 1080px; overflow: hidden; background: #07050d; }
+      #root { position: relative; width: 100%; height: 100%; }
+      #stage { position: absolute; inset: 0; width: 1920px; height: 1080px; image-rendering: pixelated; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="16.0" data-width="1920" data-height="1080" data-fps="30">
+      <canvas id="stage" width="1920" height="1080"></canvas>
+      <audio id="song" class="clip" data-start="0" data-duration="16.0" data-track-index="2" data-volume="1" src="assets/song.wav"></audio>
+    </div>
+    <script>
+      // HyperFrames 要求根合成注册一条暂停的 GSAP 时间轴；画面不靠它，靠 src/main.js 的 hf-seek
+      window.__timelines = window.__timelines || {};
+      window.__timelines["main"] = gsap.timeline({ paused: true });
+    </script>
+    <script type="module" src="src/main.js"></script>
+  </body>
+</html>

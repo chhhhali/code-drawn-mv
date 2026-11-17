@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="zh-Hans" data-resolution="landscape">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <!-- 时段对比：同一时刻、同一个镜头，换四个钟点和天气（times.js 里的 PRESETS）各画一格，看这个镜头在不同时间下好不好看。
+         用法（项目根目录）：npx -y hyperframes@0.9.41 snapshot tools/times --at 27.7 --no-end -o renders/_times --timeout 170000 -->
+    <script src="lib/gsap/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; }
+      html, body { width: 1920px; height: 1080px; overflow: hidden; background: #000; }
+      #stage { position: absolute; inset: 0; width: 1920px; height: 1080px; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="times" data-start="0" data-duration="300" data-width="1920" data-height="1080" data-fps="30">
+      <canvas id="stage" width="1920" height="1080"></canvas>
+    </div>
+    <script>
+      window.__timelines = window.__timelines || {};
+      window.__timelines["times"] = gsap.timeline({ paused: true });
+    </script>
+    <script type="module" src="times.js"></script>
+  </body>
+</html>

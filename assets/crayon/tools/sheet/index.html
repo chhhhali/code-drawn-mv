@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <!-- 角色设定图（第 3 步）：和 MV 用同一份 src/character.js。
+         截图：npx -y hyperframes@0.9.41 snapshot tools/sheet --at 0.5 --no-end -o renders/_sheet --timeout 120000 -->
+    <script src="lib/gsap/gsap.min.js"></script>
+    <style>
+      @font-face {
+        font-family: "MVRound";
+        src: local("Yuanti SC Bold"), local("STYuanti-SC-Bold"), local("Yuanti TC Bold"), local("STYuanti-TC-Bold");
+        font-weight: 700;
+      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1920px; height: 1080px; overflow: hidden; background: #efe6d2; }
+      #root { position: relative; width: 100%; height: 100%; }
+      #sheet { position: absolute; inset: 0; width: 1920px; height: 1080px; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="sheet" data-start="0" data-duration="1" data-width="1920" data-height="1080">
+      <canvas id="sheet" width="1920" height="1080" data-layout-allow-overflow></canvas>
+    </div>
+    <script>
+      window.__timelines = window.__timelines || {};
+      window.__timelines["sheet"] = gsap.timeline({ paused: true });
+    </script>
+    <script type="module">
+      import { drawPerson } from "./src/character.js";
+      import { textures, crayon, pat } from "./src/crayon.js";
+      const ctx = document.getElementById("sheet").getContext("2d");
+      const label = (t, x, y, size = 30, color = "#5a4636") => {
+        ctx.font = `700 ${size}px "MVRound", sans-serif`;
+        ctx.fillStyle = color;
+        ctx.textAlign = "center";
+        ctx.fillText(t, x, y);
+      };
+      // hold 的例子：手里拿一个气球（设计坐标，跟着角色缩放、镜像）
+      const balloon = (g, x, y) => {
+        g.save();
+        g.strokeStyle = "#7a6a5a";
+        g.lineWidth = 5;
+        g.beginPath();
+        g.moveTo(x, y);
+        g.quadraticCurveTo(x + 120, y - 160, x + 170, y - 300);
+        g.stroke();
+        g.restore();
+        const p = new Path2D();
+        p.ellipse(x + 180, y - 375, 64, 78, 0, 0, Math.PI * 2);
+        crayon(g, p, { fill: "#e0704a", line: "#a8462c", lw: 6, shade: 0.18, hl: 0.22 });
+      };
+      async function build() {
+        await document.fonts.load('700 30px "MVRound"');
+        textures();
+      }
+      function draw() {
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        ctx.fillStyle = "#efe6d2";
+        ctx.fillRect(0, 0, 1920, 1080);
+        ctx.globalAlpha = 0.5;
+        ctx.fillStyle = pat(ctx, "tooth");
+        ctx.fillRect(0, 0, 1920, 1080);
+        ctx.globalAlpha = 1;
+        label("a", 90, 110, 72, "#3a2d29");
+        label("短发·长裤", 90, 160, 22);
+        label("b", 90, 630, 72, "#3a2d29");
+        label("长发·裙子", 90, 680, 22);
+        const a = [
+          ["3/4 侧面", { mood: "neutral" }],
+          ["伸手、踮脚", { mood: "worry", reach: 1, lift: 1, gaze: [1, -1.5], tilt: -0.3 }],
+          ["走路", { mood: "neutral", walk: 0.25 }],
+          ["坐下", { mood: "sad", sit: 1, gaze: [0.4, 0.6] }],
+          ["背影", { view: "back" }],
+        ];
+        a.forEach(([t, p], i) => {
+          const x = 330 + i * 245;
+          drawPerson(ctx, "a", x, 440, 360, p);
+          label(t, x, 490);
+        });
+        const b = [
+          ["3/4 侧面", { mood: "smile" }],
+          ["害羞", { mood: "shy", gaze: [0, 1] }],
+          ["挥手", { mood: "happy", reach: 1, reachAng: -45 }],
+          ["转身（镜像）", { mood: "sad", flip: true }],
+          ["拿东西（hold）", { mood: "smile", hold: balloon }],
+        ];
+        b.forEach(([t, p], i) => {
+          const x = 330 + i * 245;
+          drawPerson(ctx, "b", x, 960, 360, p);
+          label(t, x, 1010);
+        });
+        // 特写：头占画面大半
+        ctx.save();
+        ctx.beginPath();
+        ctx.rect(1550, 60, 340, 420);
+        ctx.clip();
+        ctx.fillStyle = "#2b3170";
+        ctx.fillRect(1550, 60, 340, 420);
+        drawPerson(ctx, "a", 1700, 1250, 1300, { mood: "cry", tear: 1, shadow: false });
+        ctx.restore();
+        label("特写·哭", 1720, 505);
+        ctx.save();
+        ctx.beginPath();
+        ctx.rect(1550, 580, 340, 420);
+        ctx.clip();
+        ctx.fillStyle = "#e7b067";
+        ctx.fillRect(1550, 580, 340, 420);
+        drawPerson(ctx, "b", 1700, 1770, 1300, { mood: "happy", shadow: false });
+        ctx.restore();
+        label("特写·开心", 1720, 1030);
+      }
+      window.__hf = window.__hf || {};
+      window.__hf.buildReady = window.__hf.buildReady || {};
+      window.__hf.buildReady["sheet"] = build().then(draw);
+      window.addEventListener("hf-seek", () => draw());
+    </script>
+  </body>
+</html>
