@@ -1,5 +1,41 @@
 # code-drawn-mv
 
+## 像素光影 · 效果展示
+
+<table>
+<tr>
+<td width="50%">
+<img src="references/style-pixel/04_%E6%A0%B7%E5%9B%BE_%E9%BB%84%E6%98%8F%E5%A4%AA%E9%98%B3%E9%9B%A8.jpg" alt="黄昏太阳雨中景样图：逆光、透明伞、牵手，身后是亮着窗的公交车" width="100%">
+<br><sub>黄昏太阳雨 · 中景</sub>
+</td>
+<td width="50%">
+<img src="references/style-pixel/05_%E6%A0%B7%E5%9B%BE_%E5%A4%9C%E9%9B%A8.jpg" alt="夜雨中景样图：路灯轮廓光、窗的泛光、伞下是干的" width="100%">
+<br><sub>夜雨 · 中景</sub>
+</td>
+</tr>
+<tr><td colspan="2">
+
+**中景样图。** 要看清表情就推到人物身高 ≥ 180 像素（大腿以上的中景）。黄昏太阳雨靠低角度的太阳做逆光：正面落进暗面，只有边亮，靠近太阳一侧的雨丝会发光。夜雨则由路灯给出暖橙轮廓光，窗和车灯四周一圈淡淡的泛光；伞下是干的，雨和水花都会跳过。
+
+</td></tr>
+<tr>
+<td width="50%">
+<img src="references/style-pixel/06_%E5%85%A8%E6%99%AF_%E5%A4%9C%E9%9B%A8.jpg" alt="夜雨全景：路灯下的人行道、城市天际线和湿地上的倒影" width="100%">
+<br><sub>夜雨 · 全景</sub>
+</td>
+<td width="50%">
+<img src="references/style-pixel/01_%E5%9B%9B%E4%B8%AA%E6%97%B6%E6%AE%B5.jpg" alt="四个时段对比：清晨薄雾、正午、黄昏逆光、夜里雨" width="100%">
+<br><sub>四个时段：清晨 · 正午 · 黄昏 · 夜里</sub>
+</td>
+</tr>
+<tr><td colspan="2">
+
+**全景。** 先用全景交代地点和光，再推到双人中景。一个镜头只做一种慢动作。
+
+</td></tr>
+</table>
+
+
 **用代码一帧帧画出整支音乐 MV，再用 HyperFrames 渲染成 MP4。**
 
 A Claude Code skill for making lyric and music videos whose every frame is drawn in JavaScript (Canvas 2D or Three.js) and rendered with [HyperFrames](https://github.com/heygen-com/hyperframes). Four starter styles are included. The one to look at first is **像素光影** — sharp pixel art whose light, shadow, rim light and bloom are computed from real light sources, at any time of day and in any weather.
@@ -68,15 +104,7 @@ A Claude Code skill for making lyric and music videos whose every frame is drawn
 
 <img src="references/style-pixel/03_%E5%88%86%E5%B1%82%E6%8B%86%E8%A7%A3_%E5%A4%9C%E9%9B%A8.jpg" alt="夜雨分层拆解：背景层、加上主体、发光层、成片" width="100%">
 
-**中景样图。** 要看清表情就推到人物身高 ≥ 180 像素（大腿以上的中景）。黄昏太阳雨靠低角度的太阳做逆光：正面落进暗面，只有边亮，靠近太阳一侧的雨丝会发光。夜雨则由路灯给出暖橙轮廓光，窗和车灯四周一圈淡淡的泛光；伞下是干的，雨和水花都会跳过。
-
-<img src="references/style-pixel/04_%E6%A0%B7%E5%9B%BE_%E9%BB%84%E6%98%8F%E5%A4%AA%E9%98%B3%E9%9B%A8.jpg" alt="黄昏太阳雨中景样图：逆光、透明伞、牵手，身后是亮着窗的公交车" width="100%">
-
-<img src="references/style-pixel/05_%E6%A0%B7%E5%9B%BE_%E5%A4%9C%E9%9B%A8.jpg" alt="夜雨中景样图：路灯轮廓光、窗的泛光、伞下是干的" width="100%">
-
-**全景。** 先用全景交代地点和光，再推到双人中景。一个镜头只做一种慢动作。
-
-<img src="references/style-pixel/06_%E5%85%A8%E6%99%AF_%E5%A4%9C%E9%9B%A8.jpg" alt="夜雨全景：路灯下的人行道、城市天际线和湿地上的倒影" width="100%">
+**中景样图和全景：** 见页首的像素光影展示。
 
 **分镜总览。** 每个镜头截一张动作最清楚的关键帧，用 `scripts/storyboard_sheet.py` 拼成总览，用户确认后再渲整片。下面这张是夜雨样片的九格总览：全景里她撑伞、他淋着雨低头，唱到「牵」时两只手正好牵上，伞往他那边歪过去。
 
