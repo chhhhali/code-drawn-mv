@@ -5,7 +5,7 @@
 A Claude Code skill for making lyric and music videos whose every frame is drawn in JavaScript (Canvas 2D or Three.js) and rendered with [HyperFrames](https://github.com/heygen-com/hyperframes). Four starter styles are included. The one to look at first is **像素光影** — sharp pixel art whose light, shadow, rim light and bloom are computed from real light sources, at any time of day and in any weather.
 
 <p align="center">
-  <img src="docs/showcase.jpg" alt="四种画风预览：蜡笔绘本、纸艺立体书、夜城流光、像素光影" width="100%">
+  <img src="docs/showcase.jpg" alt="四种画风预览：像素光影、蜡笔绘本、纸艺立体书、夜城流光" width="100%">
 </p>
 
 <p align="center"><sub>参考图都是用起步代码现画的示意图，不是成片截图。角色、地点和画面上的字只是占位。</sub></p>
